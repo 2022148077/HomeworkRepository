@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sign up page</title>
+    <meta charset="utf-8">
+    <link rel = "stylesheet" type = "text/css" href = "main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gugi&display=swap" rel="stylesheet">
+
+  </head>
+  <body>
+    <h1 style="margin-bottom:10px;">도자기공방에 오신걸 환영합니다!</h1>
+    <button onclick="location.href='login.html'" style="margin:10px;">로그인</button > <button onclick="location.href='signup.html'" style="margin:10px;">회원가입</button > <br>
+    <br> 
+    <div class="box">
+      <p><label>이름:
+        <input name="name" type="text" size="30" required autofocus autocomplete="off">
+      </label></p>
+      <p><label>아이디:
+        <input name="name" type="text" size="27" required autocomplete="off">
+      </label></p>
+      <p><label>비밀번호:
+        <input name="pwd" type="password" size="25" placeholder="영문/숫자 포함 8자리 이상" required>
+      </label></p>
+      <p><label>비밀번호 확인:
+      <input name="pwd" type="password" size="25">
+      </label></p>
+      <p><label>생년월일: <input name="date" type="date"></label></p>
+      <p><label>나이: <input name="number" type="number" min="0" max="100" step="1" value="20">
+      </label></p>
+      <p><label> 이메일: 
+        <input name = "email" type = "email" placeholder = "name@domain.com" autocomplete="on">
+      </label></p>
+      <p><label>전화번호: 
+        <input type = "tel" placeholder = "###-####-####"
+        pattern = "\d{3}-\d{4}-\d{4}" required>
+      </label></p>
+      <p>
+        무엇에 관심이 있으신가요?<br>
+        <label>식기
+          <input name="interested" type="checkbox" value="식기">
+        </label>
+        <label>장식품
+          <input name="interested" type="checkbox" value="장식품">
+        </label>
+        <label>문방구
+          <input name="interested" type="checkbox" value="문방구">
+        </label>
+      </p>
+      <p>
+        성별: 
+        <label>남자
+          <input name="sex" type="radio" value="male">
+        </label>
+        <label>여자
+          <input name="sex" type="radio" value="female">
+        </label>
+      </p>
+      <p>
+        <label>좋아하는 색: 
+          <input name = "color" type = "color">
+        </label>
+      </p>
+      <p>
+        <input type="submit" value="제출">
+        <input type="reset" value="리셋">
+        <button onclick="location.href='index.html'">취소</button >
+      </p>
+    </div>
+  </body>
+</html>
