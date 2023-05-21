@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>도자기 메인 페이지</title>
+    <meta charset="utf-8">
+    <link rel = "stylesheet" type = "text/css" href = "main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gugi&display=swap" rel="stylesheet">
+    <script>
+      document.addEventListener("DOMContentLoaded", load);
+
+      let categoryResult = [];
+      let searchResult = [];
+      let category="";
+      let keyword="";
+
+      let product = [];
+
+      let counter = 8;
+
+      function load() {
+          fetch('product.json')
+              .then(function(response) { 
+                  return response.json(); 
+              }).then(function(json) {
+                  product = json.slice(0, counter);
+                  searchResult = product;
+
+                  const searchBtn = document.getElementById("search");
+                  const main = document.getElementById("main");
+                  
+                  updateItem();
+
+                  searchBtn.addEventListener("click", search);
+              }).catch(function(error) { 
+                  console.log(error); 
+              });
+      }       
+
+      function search(event) {
+          event.preventDefault();
+
+          counter = 8;
+
+          fetch('product.json')
+              .then(function(response) { 
+                  return response.json(); 
+              }).then(function(json) {
+                  product = json.slice(0, counter);
+              }).catch(function(error) { 
+                  console.log(error); 
+              });
+
+          categoryResult = [];
+          searchResult = [];
+
+          keyword = document.getElementById("keyword").value;
+          category = document.getElementById("category").value.trim();
+
+          if (category == "모두" || category == ""){
+              categoryResult = product;
+          } else {
+              categoryResult = product.filter(item => item.type == category);
+          }
+
+          if (keyword == "") {
+              searchResult = categoryResult;
+          } else {
+              searchResult = categoryResult.filter(item => item.title.includes(keyword));
+          }
+              
+          updateItem();
+      }
+          
+
+      function updateItem() {
+          while (main.firstChild) {
+              main.removeChild(main.firstChild);
+          }
+          for (const item of searchResult) {
+              const url = `images/${item.posterImg}`;
+              getImage(url, item);
+          }
+      }
+
+      function getImage(url, item) {
+          fetch(url).then(response => {
+              if (!response.ok) {
+                  throw new Error(`HTTP error: ${response.status}`);
+              }
+              return response.blob();
+          }).then(blob => showItem(blob, item)).catch(error => console.log(error) );
+      }
+          
+      function showItem(blob, item) {
+          const imgURL = URL.createObjectURL(blob);
+          const div = document.createElement("div");
+          const img = document.createElement("img");
+          const p1 = document.createElement("p");
+          const p2 = document.createElement("p");
+          const button = document.createElement("button");
+
+          div.setAttribute("class", "columnContainer item");
+          img.src = imgURL;
+          img.alt = item.title;
+          p1.textContent = "종류: "+item.type;
+          p2.textContent = "카테고리: "+item.usage;
+          button.textContent = "더보기";
+          button.setAttribute("class", "moreInfoBtn");
+          button.addEventListener("click", moreInfo);
+
+          main.appendChild(div);
+          div.appendChild(button);
+          div.appendChild(img);
+          div.appendChild(p1);
+          div.appendChild(p2);
+              
+
+          function moreInfo(event) {
+              event.preventDefault();
+
+              const p3 = document.createElement("p");
+
+              p3.textContent = "가격: "+item.price;
+
+              div.appendChild(p3);
+          }
+      }
+
+      window.onscroll = () => {
+          if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+              fetch('product.json')
+                  .then(function(response) { 
+                      return response.json(); 
+                  }).then(function(json) {
+                      let products = json;
+                      addItem(products);
+                  }).catch(function(error) { 
+                      console.log(error); 
+                  });
+          }
+
+      };
+
+      function addItem(product) {
+          if (counter < 12 ){
+              item = product[counter];
+
+              if (category == "모두" || category == "" || item.type == category){
+                  if (keyword == "" || item.type.includes(keyword)) {
+                      const url = `images/${item.img}`;
+                      getImage(url, item);  
+                  }
+              } 
+              counter += 1;         
+          }
+      }; 
+  </script>
+  </head>
+  <body>
+    <header>
+        <h1>도자공방에 오신걸 환영합니다!</h1>
+    </header>
+    <nav>
+        <a href="index.html">홈</a>
+        <a href="login.html">로그인</a>
+        <a href="signup.html">회원가입</a>
+    </nav>
+    <div class="columnContainer">
+        <div class="columnContainer">
+            <form>
+                <input name="keyword" id="keyword" type="text" placeholder="키워드를 입력하세요" class="searchInput" />
+                <input name="category" id="category" type="text" list="categories" placeholder="카테고리를 선택하세요" class="searchInput" />
+                <datalist id="categories">
+                    <option value="그릇">
+                    <option value="컵">
+                    <option value="꽃병">
+                    <option value="모두">
+                </datalist>
+                <input id="search" type="button" value="검색하기" class="searchButton" />
+            </form>
+            <p>판매중인 도자기</p>
+            <div class="itemContainer" id="main">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
